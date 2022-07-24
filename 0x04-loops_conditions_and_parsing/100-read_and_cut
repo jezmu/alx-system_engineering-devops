@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Read and extract fields in password file
-PWD_FILE="/etc/passwd"
-while read -r LINE; do
-    echo "$LINE" | cut -d ":" -f1,3,6
-done < "$PWD_FILE
+# A script that displays the contents of '/etc/passwd'
+# Only the username, user 1d, and user home directory path is displayed
+
+while read -r password
+do
+	echo "$password" | cut -d ":" -f 1,3,6
+done < /etc/passwd
