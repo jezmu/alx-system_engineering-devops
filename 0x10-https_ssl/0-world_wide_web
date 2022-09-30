@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-# looks up subdomain names
-domain="$1"
-subs=('www' 'lb-01' 'web-01' 'web-02')
+# Display info about subdomains
+# Usage: ./0-world_wide_web <domain> [<subdomain>]
 
-print_sub ()
-{
-	# printf "The subdomain %s is a " "$1"
-	out=$(dig "$1.$2" | grep -A1 'ANSWER SECTION' | tail -n1 | awk -F' ' '{ print $4 " record and points to " $5 }')
-	echo "The subdomain $1 is a $out"
-}	
+domain () {
+	line=$(dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | tail -1)
+	echo "$2 $line" | awk '{print "The subdomain " $1 " is a " $5 " record and points to " $6}'
+}
 
-if [ -z "$2" ]; then
-	for sub in "${subs[@]}"; do
-		print_sub "$sub" "$domain"
-	done
-else
-	print_sub "$2" "$domain"
+if [ "$#" == 1 ]
+then
+	domain "$1" "www"
+	domain "$1" "lb-01"
+	domain "$1" "web-01"
+	domain "$1" "web-02"
+elif [ "$#" == 2 ]
+then
+	domain "$1" "$2"
 fi
